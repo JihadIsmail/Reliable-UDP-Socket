@@ -11,7 +11,6 @@ class R_UDP {
     public:
         // Constructor for simulation
         R_UDP(int plp) : plp(plp) {};
-
         // Reliable send method
         virtual void send(char* data) = 0;
         // Reliable receive method

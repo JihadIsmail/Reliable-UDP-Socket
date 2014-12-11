@@ -4,7 +4,7 @@
 #include "R_UDP.h"
 
 /**
-*
+* Stop and wait
 */
 class stop_and_wait : public R_UDP {
     public:

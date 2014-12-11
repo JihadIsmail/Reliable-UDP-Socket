@@ -15,9 +15,9 @@ class selective_repeat : public R_UDP {
     public:
         // Constructors
         selective_repeat(int port) : R_UDP(port) {};
-        selective_repeat(int port, int plp) : R_UDP(int port, int plp) {};
-        selective_repeat(string host_name, int port) : R_UDP(string host_name, int port) {};
-        selective_repeat(string host_name, int port, int plp) : R_UDP(string host_name, int port, int plp) {};
+        selective_repeat(int port, int plp) : R_UDP(port, plp) {};
+        selective_repeat(char* host_name, int port) : R_UDP(host_name, port) {};
+        selective_repeat(char* host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
         void send(char* data, int data_size);
         void receive(char* data);

@@ -1,6 +1,6 @@
 #include "stop_and_wait.h"
 
-void stop_and_wait::send(char* data) {
+void stop_and_wait::send(char* data, int data_size) {
     // TODO
 }
 

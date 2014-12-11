@@ -15,9 +15,9 @@ class go_back_n : public R_UDP {
     public:
         // Constructors
         go_back_n(int port) : R_UDP(port) {};
-        go_back_n(int port, int plp) : R_UDP(int port, int plp) {};
-        go_back_n(string host_name, int port) : R_UDP(string host_name, int port) {};
-        go_back_n(string host_name, int port, int plp) : R_UDP(string host_name, int port, int plp) {};
+        go_back_n(int port, int plp) : R_UDP(port, plp) {};
+        go_back_n(char* host_name, int port) : R_UDP(host_name,port) {};
+        go_back_n(char*host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
         void send(char* data, int data_size);
         void receive(char* data);

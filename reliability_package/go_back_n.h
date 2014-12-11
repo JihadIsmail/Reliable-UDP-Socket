@@ -13,10 +13,13 @@ class go_back_n : public R_UDP {
         congestion_controller cong_controller;
 
     public:
-        // Constructor
-        go_back_n(int plp) : R_UDP(plp) {};
+        // Constructors
+        go_back_n(int port) : R_UDP(port) {};
+        go_back_n(int port, int plp) : R_UDP(int port, int plp) {};
+        go_back_n(string host_name, int port) : R_UDP(string host_name, int port) {};
+        go_back_n(string host_name, int port, int plp) : R_UDP(string host_name, int port, int plp) {};
 
-        void send(char* data);
+        void send(char* data, int data_size);
         void receive(char* data);
         void close();
 

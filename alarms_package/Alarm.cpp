@@ -10,4 +10,5 @@ void Alarm::stop() {
 
 Alarm::~Alarm() {
     //dtor
+    delete listner;
 }

@@ -8,11 +8,11 @@ using namespace std;
 
 class Alarm {
     private:
-        Alarm_listner listner;
+        Alarm_listner *listner;
     public:
         Alarm() {};
 
-        void set_alarm_listner(Alarm_listner listner) {
+        void set_alarm_listner(Alarm_listner *listner) {
             this->listner = listner;
         }
 

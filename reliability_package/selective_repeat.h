@@ -13,10 +13,13 @@ class selective_repeat : public R_UDP {
         congestion_controller cong_controller;
 
     public:
-        // Constructor
-        selective_repeat(int plp) : R_UDP(plp) {};
+        // Constructors
+        selective_repeat(int port) : R_UDP(port) {};
+        selective_repeat(int port, int plp) : R_UDP(port, plp) {};
+        selective_repeat(char* host_name, int port) : R_UDP(host_name, port) {};
+        selective_repeat(char* host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
-        void send(char* data);
+        void send(char* data, int data_size);
         void receive(char* data);
         void close();
 

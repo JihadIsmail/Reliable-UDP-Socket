@@ -10,6 +10,7 @@
 #include <sys/socket.h> /* socket */
 #include <netdb.h>
 #include <netinet/in.h> /* socket */
+#include <stdint.h>   /*int*/
 
 #include <iostream>
 
@@ -51,6 +52,24 @@ class R_UDP : Alarm_listner{
     private:
         int udp_socketfd;
         int plp = 0;
+
+        /* Data-only packets 512 byte */
+        struct packet {
+        /* Header */
+        uint16_t chksum;
+        uint16_t len;
+        uint32_t seqno;
+        char data[500]; /* Data */
+        };
+
+        /* Ack-only packets are only 8 bytes */
+        struct ack_packet {
+        uint16_t cksum;
+        uint16_t len;
+        uint32_t ackno;
+        };
+
+
 
         void create_udp_server(int port) {
             udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0);

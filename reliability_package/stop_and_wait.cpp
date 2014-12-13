@@ -10,7 +10,7 @@ void stop_and_wait::send(char* data, int data_size) {
 		//start a timer after each pckt`s sending
 		// if the time expired retransmit the pkt again
 		// if ack received before the timeout expired snd the nxt packet}
-
+}
 void stop_and_wait::receive(char* data) {
     // TODO
 }

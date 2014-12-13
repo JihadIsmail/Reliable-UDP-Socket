@@ -56,18 +56,18 @@ class R_UDP : Alarm_listner{
 
         /* Data-only packets 512 byte */
         struct packet {
-        /* Header */
-        uint16_t chksum;
-        uint16_t len;
-        uint32_t seqno;
-        char data[500]; /* Data */
+        	/* Header */
+            uint16_t chksum;
+            uint16_t len;
+            uint32_t seqno;
+            char data[500]; /* Data */
         };
 
         /* Ack-only packets are only 8 bytes */
         struct ack_packet {
-        uint16_t chksum;
-        uint16_t len;
-        uint32_t ackno;
+            uint16_t chksum;
+            uint16_t len;
+            uint32_t ackno;
         };
 
 

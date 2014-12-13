@@ -1,6 +1,6 @@
 #include "selective_repeat.h"
 
-void selective_repeat::send(char* data, int data_size) {
+void selective_repeat::send(packet packet) {
     // TODO
 }
 

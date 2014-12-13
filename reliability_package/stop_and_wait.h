@@ -4,14 +4,17 @@
 #include "R_UDP.h"
 
 /**
-*
+* Stop and wait
 */
 class stop_and_wait : public R_UDP {
     public:
-        // Constructor
-        stop_and_wait(int plp) : R_UDP(plp) {};
+        // Constructors
+        stop_and_wait(int port) : R_UDP(port) {};
+        stop_and_wait(int port, int plp) : R_UDP(port, plp) {};
+        stop_and_wait(char* host_name, int port) : R_UDP(host_name, port) {};
+        stop_and_wait(char* host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
-        void send(char* data);
+        void send(char* data, int data_size);
         void receive(char* data);
         void close();
 

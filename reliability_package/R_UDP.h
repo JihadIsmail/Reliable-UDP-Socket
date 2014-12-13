@@ -11,7 +11,7 @@
 #include <netdb.h>
 #include <netinet/in.h> /* socket */
 #include <stdint.h>   /*int*/
-
+#include <math.h>       /* ceil */
 #include <iostream>
 
 using namespace std;
@@ -52,6 +52,7 @@ class R_UDP : Alarm_listner{
     private:
         int udp_socketfd;
         int plp = 0;
+        uint16_t chksum;
 
         /* Data-only packets 512 byte */
         struct packet {
@@ -64,7 +65,7 @@ class R_UDP : Alarm_listner{
 
         /* Ack-only packets are only 8 bytes */
         struct ack_packet {
-        uint16_t cksum;
+        uint16_t chksum;
         uint16_t len;
         uint32_t ackno;
         };

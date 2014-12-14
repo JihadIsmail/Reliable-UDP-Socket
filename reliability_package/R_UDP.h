@@ -14,11 +14,30 @@
 #include <math.h>       /* ceil */
 #include <iostream>
 
+#include <thread>
+
 using namespace std;
 
 /**
 *
 */
+
+/* Data-only packets 512 byte */
+struct packet {
+    /* Header */
+    uint16_t chksum;
+    uint16_t len;
+    uint32_t seqno;
+    char data[500]; /* Data */
+};
+
+/* Ack-only packets are only 8 bytes */
+struct ack_packet {
+    uint16_t chksum;
+    uint16_t len;
+    uint32_t ackno;
+};
+
 class R_UDP : Alarm_listner{
     public:
         // Server Constructor
@@ -42,7 +61,36 @@ class R_UDP : Alarm_listner{
         };
 
         // Reliable send method
-        virtual void send(char* data, int data_size) = 0;
+        void send(char* data, int data_size) {
+            // split data into packets and send
+            packet pckt;
+            int index = 0;
+            int length = 0 ;
+            int seqnum = 0 ;
+                while(index < data_size){
+                    length = data_size - index;
+                    if(length >= 500){
+                        for(int i = 0 ; i < 500 ; i++){
+                            pckt.data[i] = data [index];
+                        }
+                        pckt.len = 512;
+                        pckt.seqno = seqnum;
+                    }
+                    else{
+                        for(int i = 0 ; i < length ; i++){
+                            pckt.data[i] = data [index];
+                        }
+                        pckt.len = 12 + length;
+                        pckt.seqno = seqnum;
+                    }
+                    seqnum++;
+                    // checksum
+                    //pckt.chksum = chksum;
+                    //===================
+                    send(pckt);
+                }
+        };
+
         // Reliable receive method
         virtual void receive(char* data) = 0;
 
@@ -50,28 +98,12 @@ class R_UDP : Alarm_listner{
 
         virtual void on_timeout(int alarm_id) = 0;
 
+    protected:
+        virtual void send(packet packet) = 0;
     private:
         int udp_socketfd;
         int plp = 0;
         uint16_t chksum;
-
-        /* Data-only packets 512 byte */
-        struct packet {
-        	/* Header */
-        	uint16_t chksum;
-        	uint16_t len;
-        	uint32_t seqno;
-        	char data[500]; /* Data */
-        };
-
-        /* Ack-only packets are only 8 bytes */
-        struct ack_packet {
-			uint16_t chksum;
-			uint16_t len;
-			uint32_t ackno;
-        };
-
-
 
         void create_udp_server(int port) {
             udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0);

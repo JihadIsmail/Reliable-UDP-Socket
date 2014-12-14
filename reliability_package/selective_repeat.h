@@ -9,7 +9,7 @@
 */
 class selective_repeat : public R_UDP {
     private:
-        int cwnd;
+        int cwnd = 1;
         congestion_controller cong_controller;
 
     public:
@@ -19,7 +19,7 @@ class selective_repeat : public R_UDP {
         selective_repeat(char* host_name, int port) : R_UDP(host_name, port) {};
         selective_repeat(char* host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
-        void send(char* data, int data_size);
+        void send(packet packet);
         void receive(char* data);
         void close();
 

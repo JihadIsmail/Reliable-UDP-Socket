@@ -1,6 +1,6 @@
 #include "go_back_n.h"
 
-void go_back_n::send(char* data, int data_size) {
+void go_back_n::send(packet packet) {
     // TODO
 }
 

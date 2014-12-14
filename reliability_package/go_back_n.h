@@ -19,7 +19,7 @@ class go_back_n : public R_UDP {
         go_back_n(char* host_name, int port) : R_UDP(host_name,port) {};
         go_back_n(char*host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
-        void send(char* data, int data_size);
+        void send(packet packet);
         void receive(char* data);
         void close();
 

@@ -3,12 +3,15 @@
 
 #include "Alarm_listner.h"
 #include "chrono"
-
+#include "thread"
 using namespace std;
 
 class Alarm {
     private:
         Alarm_listner *listner;
+        bool stop_sleep = false;
+        thread timer ;
+        void wait_for_time(unsigned int time_out, unsigned int alarm_id);
     public:
         Alarm() {};
 
@@ -18,6 +21,7 @@ class Alarm {
 
         void start(unsigned int time_out, unsigned int alarm_id);
         void stop();
+
 
         virtual ~Alarm();
 };

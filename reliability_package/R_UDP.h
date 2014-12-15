@@ -93,6 +93,7 @@ class R_UDP : Alarm_listner{
 
         // Reliable receive method
         virtual void receive(char* data) = 0;
+
         virtual void close() = 0;
 
         virtual void on_timeout(int alarm_id) = 0;

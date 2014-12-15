@@ -2,6 +2,9 @@
 #define STOP_AND_WAIT_H
 
 #include "R_UDP.h"
+#include "../alarms_package/Alarm.h"
+#include <mutex>
+#include <stdint.h>   /*int*/
 
 /**
 * Stop and wait
@@ -17,6 +20,17 @@ class stop_and_wait : public R_UDP {
         void send(packet packet);
         void receive(char* data);
         void close();
+    private:
+        mutex one_pkt_lock;
+        Alarm alarm ;
+        ack_packet ack = 0;
+        packet pkt = 0 ;
+        int time_out , bytes_snd_rcv ;
+        char* data ;
+
+        void send_ack(uint32_t ackno);
+
+
 
         // Destructor
         virtual ~stop_and_wait();

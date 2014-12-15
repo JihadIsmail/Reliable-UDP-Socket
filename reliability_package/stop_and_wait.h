@@ -4,8 +4,6 @@
 #include "R_UDP.h"
 #include "../alarms_package/Alarm.h"
 
-#include <mutex>
-
 #include <stdio.h>
 #include <stdlib.h> /* exit function */
 #include <string.h> /* bzero */
@@ -30,13 +28,13 @@ class stop_and_wait : public R_UDP {
         void r_send(packet packet);
         void receive(char* data);
         void close();
+
+        void on_timeout(int alarm_id);
     private:
-        mutex one_pkt_lock;
-       // Alarm alarm() ;
         ack_packet ack;
         packet pkt;
-        int time_out , bytes_snd_rcv ;
-        char* data ;
+        int bytes_snd_rcv;
+        char* data;
 
         void send_ack(uint32_t ackno);
 

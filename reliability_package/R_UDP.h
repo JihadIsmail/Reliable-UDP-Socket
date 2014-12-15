@@ -102,6 +102,7 @@ class R_UDP : public Alarm_listner{
         int udp_socketfd;
         int plp = 0;
         uint16_t chksum;
+        int time_out ;
 
         virtual void r_send(packet packet) = 0;
     private:

@@ -38,7 +38,7 @@ struct ack_packet {
     uint32_t ackno;
 };
 
-class R_UDP : Alarm_listner{
+class R_UDP : public Alarm_listner{
     public:
         // Server Constructor
         R_UDP(int port) {
@@ -61,7 +61,7 @@ class R_UDP : Alarm_listner{
         };
 
         // Reliable send method
-        void send(char* data, int data_size) {
+        void r_send(char* data, int data_size) {
             // split data into packets and send
             packet pckt;
             int index = 0;
@@ -87,7 +87,7 @@ class R_UDP : Alarm_listner{
                     // checksum
                     //pckt.chksum = chksum;
                     //===================
-                    send(pckt);
+                    r_send(pckt);
                 }
         };
 
@@ -99,12 +99,12 @@ class R_UDP : Alarm_listner{
         virtual void on_timeout(int alarm_id) = 0;
 
     protected:
-        virtual void send(packet packet) = 0;
-    private:
         int udp_socketfd;
         int plp = 0;
         uint16_t chksum;
 
+        virtual void r_send(packet packet) = 0;
+    private:
         void create_udp_server(int port) {
             udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0);
             if (udp_socketfd < 0) {

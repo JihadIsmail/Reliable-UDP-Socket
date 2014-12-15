@@ -1,7 +1,7 @@
 #include "Alarm.h"
 
 void Alarm::start(unsigned int time_out, unsigned int alarm_id) {
-	 thread thrd(wait_for_time ,time_out);
+//	 thread thrd(wait_for_time ,time_out);
 }
 
 void Alarm::stop() {

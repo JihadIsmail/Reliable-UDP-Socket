@@ -4,6 +4,7 @@
 #include "R_UDP.h"
 #include "../congestion_control_package/congestion_controller.h"
 
+
 /**
 *
 */
@@ -19,7 +20,7 @@ class go_back_n : public R_UDP {
         go_back_n(char* host_name, int port) : R_UDP(host_name,port) {};
         go_back_n(char*host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
-        void send(packet packet);
+        void r_send(packet packet);
         void receive(char* data);
         void close();
 

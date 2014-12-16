@@ -43,21 +43,28 @@ class R_UDP : public Alarm_listner{
         // Server Constructor
         R_UDP(int port) {
             create_udp_server(port);
+            cout << "Server Started on port " << port << endl;
         };
 
         // Server Constructor for simulation
-        R_UDP(int port, int plp) : plp(plp) {
+        R_UDP(int port, int plp) {
+            this->plp = (plp > 1 || plp < 0? 1 : plp);
             create_udp_server(port);
+            cout << "Server Started on port " << port <<
+                    "with PLP = " << this->plp << endl;
         };
 
         // Client Constructor
         R_UDP(char* host_name, int port) {
             create_udp_client(host_name, port);
+            cout << "Client Started on port " << port << endl;
         };
 
         // Client Constructor for simulation
-        R_UDP(char* host_name, int port, int plp) : plp(plp) {
+        R_UDP(char* host_name, int port, int plp) {
+            // TODO(houssainy) remove plp from client
             create_udp_client(host_name, port);
+            cout << "Client Started on port " << port << endl;
         };
 
         // Reliable send method

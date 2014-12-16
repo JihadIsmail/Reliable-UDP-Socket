@@ -1,9 +1,10 @@
+/**
+ * An interface to handle on timeout function.
+ */
 #ifndef ALARM_LISTNER_H
 #define ALARM_LISTNER_H
 
-
-class Alarm_listner
-{
+class Alarm_listner {
     public:
         virtual void on_timeout(int alarm_id) = 0;
 };

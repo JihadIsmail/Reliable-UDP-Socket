@@ -21,7 +21,7 @@ class selective_repeat : public R_UDP {
 
         void r_send(packet packet);
         void receive(char* data);
-        void close();
+        void r_close();
 
         // Destructor
         virtual ~selective_repeat();

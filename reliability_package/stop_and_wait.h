@@ -24,7 +24,6 @@ class stop_and_wait : public R_UDP {
         stop_and_wait(int port) : R_UDP(port) {};
         stop_and_wait(int port, int plp) : R_UDP(port, plp) {};
         stop_and_wait(char* host_name, int port) : R_UDP(host_name, port) {};
-        stop_and_wait(char* host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
         void r_send();
         void receive(char* data);

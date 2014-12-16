@@ -61,13 +61,6 @@ class R_UDP : public Alarm_listner{
             cout << "Client Started on port " << port << endl;
         };
 
-        // Client Constructor for simulation
-        R_UDP(char* host_name, int port, int plp) {
-            // TODO(houssainy) remove plp from client
-            create_udp_client(host_name, port);
-            cout << "Client Started on port " << port << endl;
-        };
-
         // Reliable send method
         void r_send(char* data, int data_size) {
             // split data into packets and send

@@ -1,21 +1,23 @@
 #include "Alarm.h"
 
 void Alarm::start(unsigned int time_out, unsigned int alarm_id) {
-//	 thread thrd(wait_for_time ,time_out);
+  timer = thread(&Alarm::sleep, this, time_out, alarm_id);
+}
+
+void Alarm::sleep(unsigned int time_out, unsigned int alarm_id) {
+  is_stopped = false;
+  this_thread::sleep_for(std::chrono::milliseconds(time_out));
+  if(listner != NULL && !is_stopped)
+    listner->on_timeout(alarm_id);
 }
 
 void Alarm::stop() {
-	stop_sleep = true;
-}
-
-void Alarm::wait_for_time(unsigned int time_out, unsigned int alarm_id){
-	this_thread::sleep_for(std::chrono::seconds(time_out));
-	 if(!stop_sleep){
-		 listner->on_timeout(alarm_id);
-	 }
+    cout << "Alarm stopped" << endl;
+	is_stopped = true;
 }
 
 Alarm::~Alarm() {
     //dtor
+    timer.join();
     delete listner;
 }

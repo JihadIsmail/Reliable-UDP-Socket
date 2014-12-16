@@ -6,14 +6,17 @@
 #include "chrono"
 #include "thread"
 
+#include <iostream>
 using namespace std;
 
 class Alarm {
     private:
       Alarm_listner *listner;
-      bool stop_sleep = false;
+
+      bool is_stopped = false;
       thread timer;
-      void wait_for_time(unsigned int time_out, unsigned int alarm_id);
+
+      void sleep(unsigned int time_out, unsigned int alarm_id);
     public:
       Alarm() {};
 

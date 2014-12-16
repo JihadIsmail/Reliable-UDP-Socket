@@ -11,6 +11,7 @@
 #include <sys/types.h> /* socket */
 #include <sys/socket.h> /* socket */
 #include <netdb.h>
+#include <mutex>
 #include <netinet/in.h> /* socket */
 #include <stdint.h>   /*int*/
 
@@ -25,17 +26,18 @@ class stop_and_wait : public R_UDP {
         stop_and_wait(char* host_name, int port) : R_UDP(host_name, port) {};
         stop_and_wait(char* host_name, int port, int plp) : R_UDP(host_name, port, plp) {};
 
-        void r_send(packet packet);
+        void r_send();
         void receive(char* data);
-        void close();
+        void r_close();
 
         void on_timeout(int alarm_id);
     private:
         ack_packet ack;
         packet pkt;
         int bytes_snd_rcv;
-        char* data;
-
+        int current = 0;
+        mutex mtx;
+        bool stop =false;
         void send_ack(uint32_t ackno);
 
         // Destructor

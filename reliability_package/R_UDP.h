@@ -13,8 +13,9 @@
 #include <stdint.h>   /*int*/
 #include <math.h>       /* ceil */
 #include <iostream>
-
+#include <deque>
 #include <thread>
+#include <condition_variable>
 
 using namespace std;
 
@@ -87,14 +88,14 @@ class R_UDP : public Alarm_listner{
                     // checksum
                     //pckt.chksum = chksum;
                     //===================
-                    r_send(pckt);
+                    packets.push_back(pckt);
                 }
         };
 
         // Reliable receive method
         virtual void receive(char* data) = 0;
 
-        virtual void close() = 0;
+        virtual void r_close() = 0;
 
         virtual void on_timeout(int alarm_id) = 0;
 
@@ -103,9 +104,14 @@ class R_UDP : public Alarm_listner{
         int plp = 0;
         uint16_t chksum;
         int time_out ;
+        deque <packet> packets;
+        condition_variable cv;
+        bool pause = false;
 
-        virtual void r_send(packet packet) = 0;
+        virtual void r_send() = 0;
     private:
+
+
         void create_udp_server(int port) {
             udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0);
             if (udp_socketfd < 0) {

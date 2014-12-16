@@ -8,7 +8,7 @@ void selective_repeat::receive(char* data) {
     // TODO
 }
 
-void selective_repeat::close() {
+void selective_repeat::r_close() {
     // TODO
 }
 

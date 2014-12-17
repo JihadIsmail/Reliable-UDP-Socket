@@ -65,31 +65,18 @@ class R_UDP : public Alarm_listner{
         void r_send(const char* data, int data_size) {
             // split data into packets and send
             packet pckt;
-            int index = 0;
-            int length = 0 ;
             int seqnum = 0 ;
-                while(index < data_size){
-                    length = data_size - index;
-                    if(length >= 500){
-                        for(int i = 0 ; i < 500 ; i++){
-                            pckt.data[i] = data [index];
-                        }
-                        pckt.len = 512;
-                        pckt.seqno = seqnum;
-                    }
-                    else{
-                        for(int i = 0 ; i < length ; i++){
-                            pckt.data[i] = data [index];
-                        }
-                        pckt.len = 12 + length;
-                        pckt.seqno = seqnum;
-                    }
-                    seqnum++;
-                    // checksum
-                    //pckt.chksum = chksum;
-                    //===================
-                    packets.push_back(pckt);
-                }
+            for (int i=0 ; i< data_size ; i+=500,seqnum++){
+                int j =0 ;
+                for (; j<500 && j+i<data_size; j++)
+                    pckt.data[j]=data[i];
+                pckt.len = j;
+                pckt.seqno = seqnum;
+                packets.push_back(pckt);
+                if (pause)
+                    cv.notify_all();
+            }
+
         };
 
         // Reliable receive method

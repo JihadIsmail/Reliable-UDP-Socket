@@ -1,3 +1,6 @@
+/**
+* Stop and wait
+*/
 #ifndef STOP_AND_WAIT_H
 #define STOP_AND_WAIT_H
 
@@ -16,9 +19,6 @@
 #include <netinet/in.h> /* socket */
 #include <stdint.h>   /*int*/
 
-/**
-* Stop and wait
-*/
 class stop_and_wait : public R_UDP {
     public:
         // Constructors
@@ -32,22 +32,23 @@ class stop_and_wait : public R_UDP {
         void on_timeout(int alarm_id);
 
         virtual ~stop_and_wait();
-
     protected:
         void r_send();
-
     private:
         ack_packet ack;
         packet pkt;
+
         int bytes_snd_rcv;
         int current;
+
         mutex mtx;
         bool stop;
-        thread send_thread;
-        Alarm alarm;
-        void send_ack(uint32_t ackno);
 
-        // Destructor
+        thread send_thread;
+        
+        Alarm alarm;
+
+        void send_ack(uint32_t ackno);
 };
 
 #endif // STOP_AND_WAIT_H

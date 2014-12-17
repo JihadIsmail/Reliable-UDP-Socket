@@ -14,7 +14,7 @@ void client_simulator::receive_file(char* data) {
   // TODO(houssainy) implement all the function
   socket->receive(data);
 
-  cout << data << endl;
+  cout << "Data Received " << data << endl;
 }
 
 client_simulator::~client_simulator() {

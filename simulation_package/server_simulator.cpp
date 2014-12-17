@@ -10,7 +10,7 @@ void server_simulator::receive_requested_file_path(char *file_path) {
   char *data = new char[508];
   socket->receive(data);
 
-  cout << data << endl;
+  cout << "Data Received " << data << endl;
 }
 
 void server_simulator::send_file(char* file_path) {

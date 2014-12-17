@@ -45,9 +45,6 @@ class stop_and_wait : public R_UDP {
         bool stop;
 
         thread send_thread;
-        
-        Alarm alarm;
-
         void send_ack(uint32_t ackno);
 };
 

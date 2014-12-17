@@ -1,5 +1,18 @@
 #include "stop_and_wait.h"
 
+stop_and_wait::stop_and_wait(int port) : R_UDP(port) {
+    current = 0;
+}
+
+stop_and_wait::stop_and_wait(int port, int plp) : R_UDP(port, plp){
+    current = 0;
+}
+
+stop_and_wait::stop_and_wait(char* host_name, int port) : R_UDP(host_name, port){
+    send_thread = std::thread(&stop_and_wait::r_send, this);
+    stop = false;
+}
+
 void stop_and_wait::r_send() {
 
 	// TODO
@@ -9,7 +22,7 @@ void stop_and_wait::r_send() {
 	//start a timer after each pckt`s sending
 	// if the time expired retransmit the pkt again
 	// if ack received before the timeout expired snd the nxt packet
-	Alarm alarm;
+	alarm.set_alarm_listner(this);
 	unique_lock<std::mutex> lck(mtx);
 	while (!stop){
         // get new CWND from congestion control
@@ -26,7 +39,7 @@ void stop_and_wait::r_send() {
         char* data = new char[sizeof(pkt)];
         memcpy(data, &pkt, sizeof(pkt));
         alarm.start(time_out,pkt.seqno);
-        int	bytes_snd_rcv = send(udp_socketfd, data, sizeof(pkt),0);
+        int	bytes_snd_rcv = write(udp_socketfd, data, sizeof(pkt));
         if (bytes_snd_rcv == -1) {
             cout << "stop_and_wait: ERROR sending pkt!" << endl;
             exit(0);
@@ -90,6 +103,7 @@ void stop_and_wait::receive(char* data) {
 		//if (chksum == pkt.chksum) {
 		//	send_ack(pkt.seqno);
 		//}
+		cout<<pkt.seqno<<endl;
 		if (pkt.seqno == current){
 			send_ack(pkt.seqno);
 			current++;
@@ -103,8 +117,9 @@ void stop_and_wait::receive(char* data) {
 
 void stop_and_wait::r_close() {
 	// TODO
-	stop=true;
-	close(udp_socketfd);
+	//stop=true;
+	//close(udp_socketfd);
+    send_thread.join();
 	cout <<"connection closed."<<endl;
 }
 void stop_and_wait::send_ack(uint32_t ackno) {
@@ -121,12 +136,11 @@ void stop_and_wait::send_ack(uint32_t ackno) {
 }
 
 void stop_and_wait::on_timeout(int alarm_id) {
-	// TODO
 	if(alarm_id == pkt.seqno){
-        stop = true;
+        stop =true;
 	}
 }
 
 stop_and_wait::~stop_and_wait() {
-
+    r_close();
 }

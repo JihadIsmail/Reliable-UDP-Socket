@@ -62,7 +62,7 @@ class R_UDP : public Alarm_listner{
         };
 
         // Reliable send method
-        void r_send(char* data, int data_size) {
+        void r_send(const char* data, int data_size) {
             // split data into packets and send
             packet pckt;
             int index = 0;
@@ -110,22 +110,18 @@ class R_UDP : public Alarm_listner{
 
         virtual void r_send() = 0;
     private:
-
-
         void create_udp_server(int port) {
-            udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0);
-            if (udp_socketfd < 0) {
+            if ((udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
                 cout<< "Error in opening socket!" << endl;
                 exit(EXIT_FAILURE);
             }
 
-            struct sockaddr_in serv_addr, cli_addr;
-            socklen_t clilen;
+            struct sockaddr_in serv_addr;
 
             // Initialize server configuration.
             bzero((char *) &serv_addr, sizeof(serv_addr));
             serv_addr.sin_family = AF_INET;
-            serv_addr.sin_addr.s_addr = INADDR_ANY;
+            serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
             serv_addr.sin_port = htons(port);
 
             if (bind(udp_socketfd, (struct sockaddr *) &serv_addr,
@@ -136,8 +132,7 @@ class R_UDP : public Alarm_listner{
         }
 
         void create_udp_client(char* host_name, int port) {
-            udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0);
-            if (udp_socketfd < 0) {
+            if ((udp_socketfd = socket(AF_INET, SOCK_DGRAM, 0))< 0) {
               cout << "Can't open Socket!" << endl;
               exit(EXIT_FAILURE);
             }

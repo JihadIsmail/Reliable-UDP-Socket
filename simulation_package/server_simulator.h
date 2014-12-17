@@ -1,6 +1,8 @@
 #ifndef SERVER_SIMULATOR_H
 #define SERVER_SIMULATOR_H
 
+#include <iostream>
+
 #include "../reliability_package/R_UDP.h"
 #include "../reliability_package/stop_and_wait.h"
 #include "../reliability_package/go_back_n.h"
@@ -8,18 +10,14 @@
 
 using namespace std;
 
-const static string STOP_AND_WAIT = "stopAndWait";
-const static string GO_BACK_N = "goBackN";
-const static string SELECTIVE_REPEAT = "selectiveRepeat";
-
 class server_simulator {
   private:
     R_UDP *socket;
 
     R_UDP *socket_factory(string reliability_method, int port, int plp) {
-        if(reliability_method == GO_BACK_N)
+        if(reliability_method == "goBackN")
           return new go_back_n(port, plp);
-        if(reliability_method == SELECTIVE_REPEAT)
+        if(reliability_method == "selectiveRepeat")
           return new selective_repeat(port, plp);
 
         return new stop_and_wait(port, plp);

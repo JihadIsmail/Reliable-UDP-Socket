@@ -89,7 +89,7 @@ class R_UDP : public Alarm_listner{
 
       int plp = 0;
       uint16_t chksum;
-      int time_out ;
+      int time_out =10;
 
       deque <packet> packets;
       condition_variable cv;

@@ -38,8 +38,8 @@ void stop_and_wait::r_send() {
     char data[sizeof(pkt)];
     memcpy(data, &pkt, sizeof(pkt));
 
-    alarm.start(time_out,pkt.seqno);
-
+    //alarm.start(time_out,pkt.seqno);
+    cout<<"send data seq number:"<<pkt.seqno<<endl;
     int bytes_snd_rcv = sendto(udp_socketfd, data, sizeof(data), 0,
                       (struct sockaddr *)&rem_addr, sizeof(rem_addr));
     if(bytes_snd_rcv == -1) {

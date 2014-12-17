@@ -3,6 +3,8 @@
 
 #include "R_UDP.h"
 #include "../congestion_control_package/congestion_controller.h"
+#include "../alarms_package/Alarm.h"
+
 
 /**
 *
@@ -17,7 +19,6 @@ class selective_repeat : public R_UDP {
         mutex mtx;
         bool stop = false;
         Alarm alarm;
-
         void on_timeout(int alarm_id);
 
     public:

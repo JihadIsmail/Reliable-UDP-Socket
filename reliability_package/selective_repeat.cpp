@@ -1,4 +1,6 @@
 #include "selective_repeat.h"
+#include "../alarms_package/Alarm.h"
+
 
 void selective_repeat::r_send() {
     // TODO
@@ -30,7 +32,7 @@ void selective_repeat::r_send() {
 	}
 }
 
-void go_back_n::ack_receive(char* data){
+void selective_repeat::ack_receive(char* data){
     while(!stop){
         ack_packet ack;
         int bytes_snd_rcv = recv(udp_socketfd, data, sizeof(data), 0);
@@ -45,7 +47,7 @@ void go_back_n::ack_receive(char* data){
                 base = ack.ackno+1;  // only update base when the expecting ack comes
                                      // ex: pkt(1) acked , pkt(2) not acked , pkt(3) acked
                                      // since pkt2 ack `s lost "base" should not exceed it,
-                                     // to be prepared that the nxt iteration will begin with 
+                                     // to be prepared that the nxt iteration will begin with
                                      // pkt(2)
                 }
              alarm.stop(); // here i got an ack for a higher order pkt than the expecting one,
@@ -71,7 +73,7 @@ void selective_repeat::receive(char* data) {
     if (pckt.seqno< base + cwnd && pckt.seqno >= base){ // if (pckt.seqno == current){
         if (base ==  pckt.seqno){   // only if the expected data comes will ubdate its base
                                     // otherwise it will only accept and save the data
-            base = ack.ackno+1;
+            base = pckt.seqno+1;
         }
         ack_packet ack ;
         ack.len = sizeof(ack);

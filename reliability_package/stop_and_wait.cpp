@@ -33,19 +33,22 @@ void stop_and_wait::r_send() {
         break;
     }
     pause = false;
+
+    /** Sending Packet **/
     pkt = packets.front();
 
-    char data[sizeof(pkt)];
-    memcpy(data, &pkt, sizeof(pkt));
+    char data[PACKET_SIZE];
+    memcpy(data, &pkt, PACKET_SIZE);
 
-    alarm.start(time_out,pkt.seqno);
+    alarm.start(time_out, pkt.seqno);
 
-    int bytes_snd_rcv = sendto(udp_socketfd, data, sizeof(data), 0,
-                      (struct sockaddr *)&rem_addr, sizeof(rem_addr));
+    int bytes_snd_rcv = sendto(udp_socketfd, data, PACKET_SIZE, 0,
+                        (struct sockaddr *)&rem_addr, sizeof(rem_addr));
     if(bytes_snd_rcv == -1) {
       cout << "Error in sending packet!" << endl;
       exit(0);
     }
+    /** END of sending **/
 
     /** Restransmit cases:
      * - received and (corrupted or wrong seq number)
@@ -59,17 +62,19 @@ void stop_and_wait::r_send() {
      * 	 ACTION:
      *		stop timer
      */
+
+    /** Waiting Ack **/
     bool ack_corrupted = false;
 
-    char buf[sizeof(ack)];
+    char buf[ACK_SIZE];
     do {
       socklen_t addrlen = sizeof(rem_addr);
-      bytes_snd_rcv = recvfrom(udp_socketfd, buf, sizeof(ack), 0,
+      bytes_snd_rcv = recvfrom(udp_socketfd, buf, ACK_SIZE, 0,
                               (struct sockaddr *)&rem_addr, &addrlen);
       if (bytes_snd_rcv > 1)
         buf[bytes_snd_rcv] = 0; // set last byte 0
 
-      memcpy(&ack, buf, sizeof(ack));
+      memcpy(&ack, buf, ACK_SIZE);
       if(ack.len != 8 || (ack.ackno != pkt.seqno && ack.ackno != pkt.seqno - 1)) { // corrupted
           ack_corrupted = true;
           continue;
@@ -96,21 +101,21 @@ void stop_and_wait::r_send() {
 void stop_and_wait::receive(char* data) {
   // TODO
   socklen_t addrlen = sizeof(rem_addr);
-  bytes_snd_rcv = recvfrom(udp_socketfd, data, sizeof(pkt), 0,
+  bytes_snd_rcv = recvfrom(udp_socketfd, data, PACKET_SIZE, 0,
                           (struct sockaddr *)&rem_addr, &addrlen);
 
   if (bytes_snd_rcv > 1)
     data[bytes_snd_rcv] = 0; // set last byte 0
 
-  memcpy(&pkt, data, sizeof(pkt));
+  memcpy(&pkt, data, PACKET_SIZE);
 
-  if (pkt.len <= 512) {
+  if (pkt.len <= PACKET_SIZE) {
     //checksum of pkt sent
     //=======
     //if (chksum == pkt.chksum) {
     //	send_ack(pkt.seqno);
     //}
-    cout<<pkt.seqno<<endl;
+    cout << pkt.seqno << endl;
     if(pkt.seqno == current) {
       send_ack(pkt.seqno);
       current++;

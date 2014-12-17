@@ -48,8 +48,6 @@ class R_UDP : public Alarm_listner{
 
       // Server Constructor for simulation
       R_UDP(int port, int plp) {
-        packet pcl;
-        cout << "Pacckeeeeeeeeeeeet  " << sizeof(pcl) << endl;
         this->plp = (plp > 1 || plp < 0? 1 : plp);
         create_udp_server(port);
         cout << "Server Started on port " << port <<

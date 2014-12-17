@@ -19,11 +19,10 @@
 
 using namespace std;
 
-/**
-*
-*/
+#define PACKET_SIZE 508
+#define ACK_SIZE 8
 
-/* Data-only packets 512 byte */
+/* Data-only packets 508 byte */
 struct packet {
   /* Header */
   uint16_t chksum;
@@ -49,10 +48,12 @@ class R_UDP : public Alarm_listner{
 
       // Server Constructor for simulation
       R_UDP(int port, int plp) {
+        packet pcl;
+        cout << "Pacckeeeeeeeeeeeet  " << sizeof(pcl) << endl;
         this->plp = (plp > 1 || plp < 0? 1 : plp);
         create_udp_server(port);
         cout << "Server Started on port " << port <<
-                "with PLP = " << this->plp << endl;
+                " with PLP = " << this->plp << endl;
       };
 
       // Client Constructor
@@ -65,8 +66,8 @@ class R_UDP : public Alarm_listner{
       void r_send(const char* data, int data_size) {
         // split data into packets and send
         packet pckt;
-        int seqnum = 0 ;
-        for (int i = 0 ; i< data_size ; i+= 500, seqnum++){
+        int seqnum = 0;
+        for (int i = 0; i< data_size ; i+= 500, seqnum++){
           int j = 0 ;
           for (; j < 500 && j+i < data_size; j++)
               pckt.data[j] = data[i];
@@ -89,7 +90,7 @@ class R_UDP : public Alarm_listner{
 
       int plp = 0;
       uint16_t chksum;
-      int time_out =10;
+      int time_out = 10;
 
       deque <packet> packets;
       condition_variable cv;

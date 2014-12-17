@@ -75,7 +75,7 @@ void stop_and_wait::r_send() {
         buf[bytes_snd_rcv] = 0; // set last byte 0
 
       memcpy(&ack, buf, ACK_SIZE);
-      if(ack.len != 8 || (ack.ackno != pkt.seqno && ack.ackno != pkt.seqno - 1)) { // corrupted
+      if(ack.len != 8 || ack.ackno != pkt.seqno) { // corrupted
           ack_corrupted = true;
           continue;
       }
@@ -91,8 +91,6 @@ void stop_and_wait::r_send() {
         packets.pop_front();
         alarm.stop();
         break ;
-      } else if(ack.ackno == pkt.seqno -1) {
-        break;
       }
     } while(ack_corrupted && !stop);
   }
@@ -135,14 +133,15 @@ void stop_and_wait::r_close() {
 
 void stop_and_wait::send_ack(uint32_t ackno) {
   ack.len = 8;
+  ack.ackno = ackno;
   //checksum of ack which will be sent
   //==========
   //ack.chksum = chksum;
 
-  char data[sizeof(ack)];
-  memcpy(data, &ack, sizeof(ack));
+  char data[ACK_SIZE];
+  memcpy(data, &ack, ACK_SIZE);
 
-  bytes_snd_rcv = sendto(udp_socketfd, data, sizeof(data), 0,
+  bytes_snd_rcv = sendto(udp_socketfd, data, ACK_SIZE, 0,
                         (struct sockaddr *)&rem_addr, sizeof(rem_addr));
   if(bytes_snd_rcv == -1)
     cout <<"stop_and_wait::send_ack : ERROR sending ack"<<endl;

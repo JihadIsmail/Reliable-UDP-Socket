@@ -7,7 +7,7 @@ server_simulator::server_simulator(string reliability_method, int port, int plp)
 
 void server_simulator::receive_requested_file_path(char *file_path) {
   // TODO(houssainy)implement all the function
-  char *data = new char[508];
+  char *data = new char[PACKET_SIZE];
   socket->receive(data);
 
   cout << "Data Received " << data << endl;

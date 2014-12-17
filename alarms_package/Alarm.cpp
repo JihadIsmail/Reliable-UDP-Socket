@@ -11,10 +11,11 @@ void Alarm::sleep(unsigned int time_out, unsigned int alarm_id) {
   this_thread::sleep_for(std::chrono::milliseconds(time_out));
   if(listner != NULL && !is_stopped)
     listner->on_timeout(alarm_id);
+  cout << "Alarm woked up" << endl;
 }
 
 void Alarm::stop() {
-    cout << "Alarm stopped" << endl;
+  cout << "Alarm stopped" << endl;
 	is_stopped = true;
 }
 

@@ -21,10 +21,11 @@ void stop_and_wait::r_send() {
   //start a timer after each pckt`s sending
   // if the time expired retransmit the pkt again
   // if ack received before the timeout expired snd the nxt packet
-  alarm.set_alarm_listner(this);
   unique_lock<std::mutex> lck(mtx);
   while (!stop){
     // TODO() get new CWND from congestion control
+    Alarm alarm;
+    alarm.set_alarm_listner(this);
     if(packets.empty()) { // No packets are ready to be sent
       pause = true;
       cout << "zzz..." << ", queue size: " << packets.size() << endl;

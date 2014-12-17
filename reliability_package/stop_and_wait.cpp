@@ -21,9 +21,10 @@ void stop_and_wait::r_send() {
   //start a timer after each pckt`s sending
   // if the time expired retransmit the pkt again
   // if ack received before the timeout expired snd the nxt packet
-  alarm.set_alarm_listner(this);
   unique_lock<std::mutex> lck(mtx);
   while (!stop){
+    Alarm alarm ;
+    alarm.set_alarm_listner(this);
     // TODO() get new CWND from congestion control
     if(packets.empty()) { // No packets are ready to be sent
       pause = true;
@@ -40,7 +41,7 @@ void stop_and_wait::r_send() {
     char data[PACKET_SIZE];
     memcpy(data, &pkt, PACKET_SIZE);
 
-//    alarm.start(time_out, pkt.seqno);
+    alarm.start(time_out, pkt.seqno);
 
     int bytes_snd_rcv = sendto(udp_socketfd, data, PACKET_SIZE, 0,
                         (struct sockaddr *)&rem_addr, sizeof(rem_addr));
@@ -148,10 +149,23 @@ void stop_and_wait::send_ack(uint32_t ackno) {
 }
 
 void stop_and_wait::on_timeout(int alarm_id) {
-  if(alarm_id == pkt.seqno)
-    stop = true;
+ cout << "TIMEOUT!" << endl;
+  // retransmet packet
+  if(alarm_id == pkt.seqno){
+    char data[PACKET_SIZE];
+    memcpy(data, &pkt, PACKET_SIZE);
+    Alarm alarm;
+    alarm.set_alarm_listner(this);
+    alarm.start(time_out, pkt.seqno);
+    cout<<"sending packet seqno:"<<pkt.seqno<<endl;
+    int bytes_snd_rcv = sendto(udp_socketfd, data, PACKET_SIZE, 0,
+                        (struct sockaddr *)&rem_addr, sizeof(rem_addr));
+    if(bytes_snd_rcv == -1) {
+      cout << "Error in sending packet!" << endl;
+      exit(0);
+    }
+  }
 }
-
 stop_and_wait::~stop_and_wait() {
   r_close(); // TODO(houssainy) what if it's already stopped!
 }
